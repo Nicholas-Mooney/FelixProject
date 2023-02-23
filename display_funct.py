@@ -143,7 +143,6 @@ def redraw_hand_visble(player, selected=None):
 
         card.rect = card.rect.move(iterating_fact * card_index, 0)
         scale_card_blit(card.card_data, card.rect)
-
         card_index += 1
 
     # displaying the placeholder playing player number
@@ -238,20 +237,72 @@ def redraw_screen(player_you, board, players_other):
     for player in player_you:
         (player_dat, selected) = player
         redraw_hand_visble(player_dat, selected)  # O(n)
-
     # grab a list of all players excluding the currenly playing one
     players_temp = players_other[:]  # O(n)
     players_temp.remove(player_dat)  # O(n)
-
     # draw all players (excluding the currently playing player) hands facedown
     # an orderly fashion on the screen
     redraw_hand_nonvisble_loop(players_temp)  # O(m*n)
-
     # draw the top card on the board
     draw_top_stack_card(board)  # O(1)
 
     # refreshing the screen
     pygame.display.flip()  # O(1)?
+def start_menu():
+    """
+    Redraws the screen to its "normal" state.
+
+    Renders the current players hand face up, the current card selected is
+    raised, the most recentl played card on the board face up, and other
+    players' hands face down.
+
+    O(m*n) runtime where m is the amount of players to be drawn and
+    n is the size of the players hand. Since both of these sizes should be
+    relatively small optimizing was considered negligible.
+    """
+    # clear screen completely
+    screen.fill(darkBlue)
+
+    width = screen.get_width()
+    height = screen.get_height()
+    mouse = pygame.mouse.get_pos()
+    #draw button1
+    if width/2 <= mouse[0] <= width/2+140 and height/2 <= mouse[1] <= height/2+40:
+        pygame.draw.rect(screen,(170,170,170),[width/2,height/2,140,40])
+
+    else:
+        pygame.draw.rect(screen,(100,100,100),[width/2,height/2,140,40])
+
+    """
+    # draw personal players hand should only be O(n) as player_you should
+    # only be one person. n is the number of cards in player_you's hand
+    for player in player_you:
+        (player_dat, selected) = player
+        redraw_hand_visble(player_dat, selected)  # O(n)
+    # grab a list of all players excluding the currenly playing one
+    players_temp = players_other[:]  # O(n)
+    players_temp.remove(player_dat)  # O(n)
+    # draw all players (excluding the currently playing player) hands facedown
+    # an orderly fashion on the screen
+    redraw_hand_nonvisble_loop(players_temp)  # O(m*n)
+    # draw the top card on the board
+    draw_top_stack_card(board)  # O(1)"""
+
+    # refreshing the screen
+    pygame.display.flip()  # O(1)?
+def process():
+    width = screen.get_width()
+    height = screen.get_height()
+    mouse = pygame.mouse.get_pos()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+        if(event.type == pygame.MOUSEBUTTONDOWN):
+            if width/2 <= mouse[0] <= width/2+140 and height/2 <= mouse[1] <= height/2+40:
+                pygame.quit()
+        #checks if a mouse is clicked
+        print(mouse)
+
 
 
 def redraw_screen_menu_color(selected=None):
